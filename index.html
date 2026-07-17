@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Roosevelt School - Arquitectura Global</title>
+<style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Roboto+Slab:wght@800;900&display=swap');
+
+        :root {
+            --c-white: #FFFFFF;
+            --c-blue: #0A3161;
+            --c-red: #BF0A30;
+            --c-glass-bg: rgba(232, 236, 242, 0.5);
+            --c-glass-border: rgba(255, 255, 255, 0.4);
+            --font-main: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            color: var(--c-blue);
+            background-color: #FAFAFA;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 48px;
+            background: var(--c-glass-bg);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--c-glass-border);
+            display: flex; justify-content: flex-end; align-items: center;
+            padding: 0 5%; z-index: 100; font-size: 13px;
+        }
+        .top-bar a {
+            color: var(--c-blue); text-decoration: none;
+            margin-left: 32px; font-weight: 500; cursor: pointer; transition: opacity 0.3s;
+        }
+        .top-bar a:hover { opacity: 0.7; }
+        .btn-conversion {
+            background-color: var(--c-red); color: var(--c-white) !important;
+            padding: 8px 20px; border-radius: 30px;
+            box-shadow: 0 4px 14px rgba(191, 10, 48, 0.3); transition: all 0.3s ease;
+        }
+        .btn-conversion:hover {
+            background-color: #a30828; transform: translateY(-1px);
+        }
+
+        /* Main Nav */
+        .main-nav-wrapper {
+            position: fixed; top: 70px; left: 0; width: 100%;
+            display: flex; justify-content: center; z-index: 99; pointer-events: none;
+        }
+        .main-nav {
+            pointer-events: auto; width: 90%; max-width: 1200px;
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 100px; display: flex; justify-content: space-between;
+            align-items: center; padding: 10px 24px;
+            box-shadow: 0 8px 32px rgba(10, 49, 97, 0.08);
+        }
+        .logo {
+            display: flex; align-items: center; gap: 12px;
+            text-decoration: none; color: var(--c-blue); font-weight: 600; font-size: 18px; cursor: pointer;
+        }
+        .logo img.nav-isotipo { height: 42px; }
+        .logo img.nav-logotipo { height: 38px; margin-left: 8px; }
+        .nav-links { display: flex; gap: 36px; align-items: center; }
+        .nav-links a {
+            color: var(--c-blue); text-decoration: none; font-size: 14px;
+            cursor: pointer; position: relative; padding: 4px 0; transition: color 0.3s;
+        }
+        .nav-links a::after {
+            content: ''; position: absolute; width: 0; height: 1px;
+            bottom: 0; left: 0; background-color: var(--c-blue); transition: width 0.3s;
+        }
+        .nav-links a:hover, .nav-links a.active { color: var(--c-red); }
+        .nav-links a:hover::after, .nav-links a.active::after { width: 100%; background-color: var(--c-red); }
+
+        /* Pages */
+        .page-section {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            flex: 1;
+        }
+        .page-section.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Generic Hero */
+        .hero {
+            height: 100vh; width: 100%; position: relative;
+            background-size: cover; background-position: center; background-attachment: fixed;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .hero::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(10, 49, 97, 0.4), rgba(10, 49, 97, 0.8));
+        }
+        .hero-content {
+            position: relative; z-index: 10; text-align: center; color: var(--c-white);
+            max-width: 900px; padding: 0 20px; margin-top: 60px;
+        }
+        .hero-content h1 { font-size: 72px; font-weight: 300; letter-spacing: -2px; margin-bottom: 24px; line-height: 1.05; }
+        .hero-content h1 span { font-weight: 600; display: block; }
+        
+        .extracted-vector-text {
+            font-family: 'Roboto Slab', serif;
+            font-weight: 900;
+            font-size: 75px;
+            color: var(--c-red);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            line-height: 1;
+            margin-bottom: 24px;
+            transform: scaleY(1.05);
+            text-shadow: 
+                -3px -3px 0 var(--c-white),  
+                 3px -3px 0 var(--c-white),
+                -3px  3px 0 var(--c-white),
+                 3px  3px 0 var(--c-white),
+                 0px  5px 15px rgba(0,0,0,0.5);
+            display: inline-block;
+        }
+        
+        .hero-vector-logo-clean {
+            max-width: 500px;
+            width: 90%;
+            margin: 0 auto 40px auto;
+            display: block;
+        }
+
+        /* Generic Hero */
+        .hero {
+            height: 100vh; width: 100%; position: relative;
+            background-size: cover; background-position: center; background-attachment: fixed;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .hero::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(10, 49, 97, 0.4), rgba(10, 49, 97, 0.8));
+        }
+        .hero-content {
+            position: relative; z-index: 2; text-align: center; color: var(--c-white);
+        }
+        .hero-content p { font-size: 22px; font-weight: 300; opacity: 0.9; max-width: 600px; margin: 0 auto; }
+        
+        /* Level Heroes */
+        .level-hero {
+            position: relative; width: 100%; height: calc(100vh + 300px); overflow: hidden;
+            background: var(--c-blue);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 10;
+            -webkit-mask-image: linear-gradient(to bottom, black 0%, black calc(100% - 300px), transparent 100%);
+            mask-image: linear-gradient(to bottom, black 0%, black calc(100% - 300px), transparent 100%);
+        }
+        .level-hero .hero-content { transform: translateY(-150px); }
+        .level-hero::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: 
+                radial-gradient(circle at 40% 60%, rgba(191, 10, 48, 0.6) 0%, transparent 50%),
+                radial-gradient(circle at 60% 40%, rgba(10, 49, 97, 0.9) 0%, transparent 50%);
+            z-index: 1; filter: blur(60px);
+            animation: levelOrbMove 20s infinite alternate ease-in-out;
+            pointer-events: none;
+        }
+        @keyframes levelOrbMove {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+            50% { transform: translate(5%, -5%) scale(1.1) rotate(10deg); }
+            100% { transform: translate(-5%, 5%) scale(0.9) rotate(-10deg); }
+        }
+        
+        /* Home Hero (Fade from white) */
+        .home-hero {
+            position: relative; width: 100%; height: 100vh; overflow: hidden;
+            background: #ffffff;
+        }
+        .home-hero::before {
+            content: ''; position: absolute; bottom: -30%; left: -10%; width: 120%; height: 80%;
+            background: 
+                radial-gradient(circle at 30% 70%, rgba(191, 10, 48, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 70% 80%, rgba(10, 49, 97, 0.08) 0%, transparent 50%);
+            z-index: 1; filter: blur(40px);
+            animation: orbMove 15s infinite alternate ease-in-out;
+            pointer-events: none;
+        }
+        @keyframes orbMove {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(3%, -8%) scale(1.05); }
+            100% { transform: translate(-2%, -3%) scale(0.95); }
+        }
+        .home-hero-content {
+            position: relative; z-index: 2; text-align: center; color: var(--c-blue);
+            height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            padding-top: 80px; width: 100%;
+        }
+
+        /* Generic Sections */
+        .content-section { padding: 100px 5%; background: var(--c-white); }
+        .content-section.alt { background: #F4F6F9; }
+        .section-title { text-align: center; font-size: 42px; font-weight: 300; margin-bottom: 60px; letter-spacing: -1px; }
+        
+        .grid-cards {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; max-width: 1200px; margin: 0 auto;
+        }
+        .card {
+            background: var(--c-white); border-radius: 16px; padding: 40px 30px;
+            box-shadow: 0 10px 30px rgba(10, 49, 97, 0.05); border: 1px solid rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+        .card:hover { transform: translateY(-5px); }
+        .card h3 { font-size: 20px; font-weight: 600; margin-bottom: 16px; }
+        .card p { font-size: 15px; color: #555; line-height: 1.6; }
+
+        .image-showcase { width: 100%; max-width: 1200px; margin: 0 auto; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
+        .image-showcase img { width: 100%; height: auto; display: block; }
+
+        /* Static Slider */
+        .slider-wrapper {
+            position: relative; width: 100%; max-width: 1200px; margin: 0 auto;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .slider-track {
+            display: flex; overflow-x: auto; scroll-behavior: smooth; gap: 20px;
+            padding: 20px 40px; scroll-snap-type: x mandatory;
+        }
+        .slider-track::-webkit-scrollbar { display: none; }
+        .slider-track { -ms-overflow-style: none; scrollbar-width: none; }
+        .slider-track img {
+            height: 450px; flex-shrink: 0; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            cursor: pointer; scroll-snap-align: center; transition: transform 0.3s;
+        }
+        .slider-track img:hover { transform: scale(1.02); }
+        .slider-btn {
+            background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2); color: white; width: 50px; height: 50px; border-radius: 25px;
+            font-size: 24px; cursor: pointer; position: absolute; z-index: 10;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition: background 0.3s, transform 0.2s;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .slider-btn:hover { background: rgba(191, 10, 48, 0.8); transform: scale(1.1); }
+        .slider-btn.prev-btn { left: 0px; }
+        .slider-btn.next-btn { right: 0px; }
+        
+        /* Lightbox */
+        .lightbox {
+            display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.9); justify-content: center; align-items: center;
+        }
+        .lightbox.active { display: flex; }
+        .lightbox img {
+            max-width: 90%; max-height: 90%; border-radius: 8px; box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            animation: zoomIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes zoomIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .lightbox-close {
+            position: absolute; top: 30px; right: 40px; color: white; font-size: 40px; font-weight: bold; cursor: pointer; transition: color 0.2s;
+        }
+        .lightbox-close:hover { color: var(--c-red); }
+
+        .highlights-section {
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--c-white);
+        }
+        .level-hero + .highlights-section {
+            margin-top: -300px;
+            padding-top: 350px;
+            z-index: 5;
+        }
+        .highlights-section > * { position: relative; z-index: 1; }
+        .highlights-section .section-title { color: var(--c-white); }
+        .highlights-section .section-title strong { font-weight: 900; }
+        .highlights-section .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--c-white);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        .highlights-section .card p { color: rgba(255, 255, 255, 0.9); }
+
+        /* Admission Process Steps */
+        .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 24px; max-width: 1200px; margin: 0 auto; }
+        .step-card {
+            background: var(--c-white); padding: 30px; border-radius: 12px;
+            border-left: 4px solid var(--c-red); box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+        .step-card h4 { font-size: 18px; margin-bottom: 12px; color: var(--c-blue); }
+        
+        /* Floating Widget */
+        .widget-contact {
+            position: fixed; bottom: 30px; right: 30px;
+            width: 60px; height: 60px; border-radius: 50%;
+            background: rgba(255,255,255,0.7); backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.5); box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 100;
+        }
+        .widget-contact::before {
+            content: '💬'; font-size: 24px;
+        }
+        .widget-contact a {
+            display: block; width: 100%; height: 100%; position: absolute; top:0; left:0;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--c-blue); color: var(--c-white); padding: 60px 5%; margin-top: auto;
+        }
+        .footer-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; max-width: 1200px; margin: 0 auto;
+        }
+        .footer-col h4 { font-weight: 500; margin-bottom: 20px; opacity: 0.9; }
+        .footer-col p, .footer-col a { color: rgba(255,255,255,0.7); font-size: 14px; text-decoration: none; display: block; margin-bottom: 10px; }
+        .footer-bottom { text-align: center; padding-top: 40px; margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 12px; color: rgba(255,255,255,0.5); }
+        
+        .cta-block { text-align: center; margin-top: 60px; }
+        .cta-block button, .cta-block a.btn-cta {
+            background: var(--c-red); color: white; border: none; padding: 15px 30px;
+            border-radius: 30px; font-size: 16px; font-weight: 500; cursor: pointer;
+            box-shadow: 0 5px 15px rgba(191,10,48,0.3); transition: transform 0.2s;
+            text-decoration: none; display: inline-block;
+        }
+        .cta-block button:hover, .cta-block a.btn-cta:hover { transform: translateY(-2px); }
+        
+        .cert-tag {
+            font-size: 16px; font-weight: 600; padding: 10px 20px; 
+            background: rgba(10, 49, 97, 0.05); border-radius: 8px; color: var(--c-blue);
+        }
+    
+        .lang-switcher { position: relative; display: inline-flex; align-items: center; margin-left: 15px; }
+        .current-lang { background: transparent; border: 1px solid var(--c-blue); color: var(--c-blue); padding: 5px 12px; border-radius: 20px; display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600; transition: all 0.2s; font-family: 'Inter', sans-serif; }
+        .current-lang img { width: 20px; border-radius: 2px; }
+        .current-lang:hover { background: rgba(10,49,97,0.05); }
+        .lang-options { display: none; position: absolute; top: calc(100% + 5px); right: 0; background: white; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); flex-direction: column; overflow: hidden; min-width: 110px; z-index: 1000; border: 1px solid #eee; }
+        .lang-options.active { display: flex; }
+        .lang-options button { background: none; border: none; padding: 12px 15px; display: flex; align-items: center; gap: 10px; cursor: pointer; text-align: left; width: 100%; font-size: 14px; transition: background 0.2s; font-family: 'Inter', sans-serif; font-weight: 500; color: var(--c-blue); }
+        .lang-options button:hover { background: #f0f4f8; }
+        .lang-options button img { width: 20px; border-radius: 2px; }
+</style>
+</head>
+<body>
+<!-- 1. Top Bar -->
+<div class="top-bar">
+<a data-i18n="nav_admission" data-target="admission-process">Proceso de Admisión</a>
+<a class="btn-conversion" data-i18n="nav_contact" href="https://wa.me/5213334093476" target="_blank">Admisiones y Contacto</a>
+
+<div class="lang-switcher">
+<button class="current-lang" id="langBtn" onclick="toggleLangMenu()"><img alt="English" src="https://flagcdn.com/w20/us.png"/> EN</button>
+<div class="lang-options" id="langOptions">
+<button onclick="setLang('en')"><img alt="English" src="https://flagcdn.com/w20/us.png"/> EN</button>
+<button onclick="setLang('es')"><img alt="Español" src="https://flagcdn.com/w20/mx.png"/> ES</button>
+</div>
+</div>
+</div>
+<!-- 2. Main Nav -->
+<div class="main-nav-wrapper">
+<nav class="main-nav">
+<a class="logo" data-target="inicio">
+<img alt="Roosevelt Isotipo" class="nav-isotipo" src="assets/logo/roosevelt_isotipo.svg"/>
+<img alt="Roosevelt School" class="nav-logotipo" src="assets/logo/roosevelt_logotipo_texto.svg"/>
+</a>
+<div class="nav-links">
+<a class="active" data-i18n="nav_inicio" data-target="inicio">Inicio</a>
+<a data-i18n="nav_early" data-target="early-years">Early Years</a>
+<a data-i18n="nav_elementary" data-target="elementary">Elementary</a>
+<a data-i18n="nav_junior" data-target="junior-high">Junior High</a>
+</div>
+</nav>
+</div>
+<!-- PÁGINA: INICIO -->
+<div class="page-section active" id="inicio">
+<section class="home-hero">
+<div class="home-hero-content">
+<img alt="Roosevelt School" class="hero-vector-logo-clean" src="assets/logo/roosevelt_logotipo_texto.svg"/>
+<p data-i18n="hero_desc" style="font-size: 26px; font-weight: 300; max-width: 800px; margin: 0 auto; color: var(--c-blue);">Con sede en Guadalajara, Jalisco, seguimos una tradición de excelencia educativa desde 1978. Sistema bilingüe, laico y mixto fundamentado en valores universales.</p>
+</div>
+</section>
+<section class="content-section highlights-section" style="background-image: linear-gradient(rgba(10, 49, 97, 0.65), rgba(10, 49, 97, 0.65)), url('assets/webassets_optimized/fondo%20inicio/fondo.webp');">
+<h2 class="section-title"><strong data-i18n="highlights_title">HIGHLIGHTS</strong></h2>
+<div class="grid-cards">
+<div class="card">
+<h3 data-i18n="home_h1_title">Formación Integral de Excelencia</h3>
+<p data-i18n="home_h1_desc">Cultivamos el desarrollo armónico de Mente, Cuerpo y Espíritu, brindando a nuestros alumnos las herramientas intelectuales y humanas para trascender.</p>
+</div>
+<div class="card">
+<h3 data-i18n="home_h2_title">Perspectiva Global</h3>
+<p data-i18n="home_h2_desc">A través de un bilingüismo de alto nivel, nuestros estudiantes dominan y aprecian la biculturalidad, expandiendo exponencialmente su horizonte profesional.</p>
+</div>
+<div class="card">
+<h3 data-i18n="home_h3_title">Liderazgo con Valores</h3>
+<p data-i18n="home_h3_desc">Cimentamos nuestro prestigio en valores universales inquebrantables, formando ciudadanos íntegros y profundamente comprometidos con el desarrollo de nuestro país.</p>
+</div>
+</div>
+</section>
+<section class="content-section alt">
+<h2 class="section-title"><strong data-i18n="facilities_title">INSTALACIONES</strong></h2>
+<div class="slider-wrapper">
+<button class="slider-btn prev-btn">&lt;</button>
+<div class="slider-track" id="instalaciones-slider">
+<img alt="Instalaciones" onclick="openLightbox(this.src)" src="assets/webassets_optimized/instalaciones/i%201.webp"/>
+<img alt="Instalaciones" onclick="openLightbox(this.src)" src="assets/webassets_optimized/instalaciones/i%203.webp"/>
+<img alt="Instalaciones" onclick="openLightbox(this.src)" src="assets/webassets_optimized/instalaciones/i%204.webp"/>
+<img alt="Instalaciones" onclick="openLightbox(this.src)" src="assets/webassets_optimized/instalaciones/i%206.webp"/>
+<img alt="Instalaciones" onclick="openLightbox(this.src)" src="assets/webassets_optimized/instalaciones/i%207.webp"/>
+<img alt="Instalaciones" onclick="openLightbox(this.src)" src="assets/webassets_optimized/instalaciones/i%208.webp"/>
+<img alt="Instalaciones" onclick="openLightbox(this.src)" src="assets/webassets_optimized/instalaciones/i%209.webp"/>
+<img alt="Instalaciones" onclick="openLightbox(this.src)" src="assets/webassets_optimized/instalaciones/i%2010.webp"/>
+<img alt="Instalaciones" onclick="openLightbox(this.src)" src="assets/webassets_optimized/instalaciones/i%2011.webp"/>
+<img alt="Instalaciones" onclick="openLightbox(this.src)" src="assets/webassets_optimized/instalaciones/i%2012.webp"/>
+<img alt="Instalaciones" onclick="openLightbox(this.src)" src="assets/webassets_optimized/instalaciones/i%2013%20.webp"/>
+<img alt="Instalaciones" onclick="openLightbox(this.src)" src="assets/webassets_optimized/instalaciones/i%2014.webp"/>
+</div>
+<button class="slider-btn next-btn">&gt;</button>
+</div>
+</section>
+<section class="content-section">
+<h2 class="section-title"><strong data-i18n="location_title">UBICACIÓN</strong></h2>
+<div style="width: 100%; max-width: 1200px; margin: 0 auto; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.1);">
+<iframe allowfullscreen="" height="450" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=Roosevelt%20School%2C%20Guadalajara&amp;t=&amp;z=15&amp;ie=UTF8&amp;iwloc=&amp;output=embed" style="border:0;" width="100%"></iframe>
+</div>
+</section>
+<section class="content-section" style="padding: 60px 5%; text-align: center;">
+<h2 class="section-title" data-i18n="accreditations_title" style="font-size: 24px; margin-bottom: 30px;">Acreditaciones y Alianzas Educativas</h2>
+<div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+<div class="cert-tag">REVOES (Preescolar, Primaria, Secundaria)</div>
+<div class="cert-tag">Alianza Francesa</div>
+<div class="cert-tag">TOEFL</div>
+<div class="cert-tag">Programa Aguilar Kubli</div>
+<div class="cert-tag">HMH Into Reading</div>
+</div>
+</section>
+</div>
+<!-- PÁGINA: ADMISSION PROCESS -->
+<div class="page-section" id="admission-process">
+<section class="hero" style="background-image: url('assets/Academia Baile Zyanya Jan 16 2026.jpg'); height: 60vh;">
+<div class="hero-content">
+<h1>Admission <span>Process</span></h1>
+<p data-i18n="adm_desc">Inicie el camino hacia la excelencia. Únase a la distinguida comunidad Roosevelt en sencillos pasos.</p>
+</div>
+</section>
+<section class="content-section">
+<div class="steps-grid">
+<div class="step-card">
+<h4 data-i18n="adm_s1_title">1. Atención Personalizada</h4>
+<p data-i18n="adm_s1_desc">A través de nuestra Oficina de Admisiones, usted recibirá atención personalizada para programar una visita y conocer de primera mano nuestras instalaciones de vanguardia.</p>
+</div>
+<div class="step-card">
+<h4>2. Pago de Evaluación</h4>
+<p>Realice el pago correspondiente a la evaluación de admisión directamente en la caja de la institución.</p>
+</div>
+<div class="step-card">
+<h4>3. Entrega de Documentación</h4>
+<p>Presente los documentos requeridos una vez efectuado el pago para integrar el expediente de excelencia del alumno.</p>
+</div>
+<div class="step-card">
+<h4>4. Entrevista de Ingreso</h4>
+<p>Una vez entregados los documentos, se agendará a los padres de familia para la primera entrevista de acercamiento y alineación de valores.</p>
+</div>
+<div class="step-card">
+<h4>5. Evaluación y Resultados</h4>
+<p>El aspirante presentará su evaluación en la fecha y hora indicadas. Los resultados se comunicarán a la brevedad vía correo electrónico.</p>
+</div>
+<div class="step-card">
+<h4>6. Inscripción Oficial</h4>
+<p>Una vez admitido, programe una cita para formalizar la inscripción y realizar el pago correspondiente, asegurando el lugar del alumno.</p>
+</div>
+</div>
+<div class="cta-block">
+<a class="btn-cta" data-i18n="adm_cta" href="https://wa.me/5213334093476" target="_blank">Contactar a Admisiones</a>
+</div>
+</section>
+</div>
+<!-- PÁGINA: EARLY YEARS -->
+<div class="page-section" id="early-years">
+<section class="level-hero">
+<div class="hero-content">
+<h1>Early <span>Years</span></h1>
+<p data-i18n="ey_hero_desc">El cimiento de un futuro brillante. Un entorno estimulante y exclusivo para desarrollar la autonomía y los primeros hábitos de excelencia.</p>
+</div>
+</section>
+<section class="content-section highlights-section" style="background-image: linear-gradient(rgba(10, 49, 97, 0.65), rgba(10, 49, 97, 0.65)), url('assets/webassets_optimized/Early%20Years/0Q5A0064.webp');">
+<h2 class="section-title" data-i18n="highlights_title">HIGHLIGHTS <strong>EARLY YEARS</strong></h2>
+<div class="grid-cards">
+<div class="card">
+<h3 data-i18n="ey_h1_title">Atención Integral y Desarrollo Humano</h3>
+<p data-i18n="ey_h1_desc">Un enfoque estructurado a través del Programa Aguilar Kubli que garantiza la independencia, seguridad emocional y el fomento temprano de valores éticos.</p>
+</div>
+<div class="card">
+<h3 data-i18n="ey_h2_title">Desarrollo de Competencias Cognitivas</h3>
+<p data-i18n="ey_h2_desc">Fomentamos la socialización y el pensamiento crítico desde los primeros pasos mediante una pedagogía de alto nivel y espacios diseñados para potenciar la motricidad.</p>
+</div>
+</div>
+</section>
+<section class="content-section alt">
+<h2 class="section-title" data-i18n="edu_goals_title">Metas Educativas</h2>
+<div class="steps-grid">
+<div class="step-card"><h4 data-i18n="ey_g1_title">Inmersión Literaria y Bilingüismo Temprano</h4><p data-i18n="ey_g1_desc">A través de programas de clase mundial como HMH Into Reading, introducimos obras literarias premiadas para crear conexiones que impulsan el desarrollo natural del idioma inglés.</p></div>
+<div class="step-card"><h4 data-i18n="ey_g2_title">Fundamentos Académicos Sólidos</h4><p data-i18n="ey_g2_desc">Consolidamos las bases de la lectoescritura con un estándar de exigencia que asegura una preparación óptima para la educación primaria.</p></div>
+<div class="step-card"><h4 data-i18n="ey_g3_title">Autonomía y Pensamiento Crítico</h4><p data-i18n="ey_g3_desc">Desarrollo de la independencia y capacidad de interactuar positivamente a través del trabajo colaborativo guiado.</p></div>
+</div>
+<div class="cta-block">
+<a class="btn-cta" data-i18n="req_info" href="https://wa.me/5213334093476" target="_blank">Solicitar Información</a>
+</div>
+</section>
+</div>
+<!-- PÁGINA: ELEMENTARY -->
+<div class="page-section" id="elementary">
+<section class="level-hero">
+<div class="hero-content">
+<h1 data-i18n="nav_elementary">Elementary <span>School</span></h1>
+<p data-i18n="el_hero_desc">Forjando mentes analíticas y líderes responsables a través de la investigación, el estudio riguroso y la disciplina.</p>
+</div>
+</section>
+<section class="content-section highlights-section" style="background-image: linear-gradient(rgba(10, 49, 97, 0.65), rgba(10, 49, 97, 0.65)), url('assets/webassets_optimized/Elementary/i%202.webp');">
+<h2 class="section-title" data-i18n="highlights_title">HIGHLIGHTS <strong>ELEMENTARY</strong></h2>
+<div class="grid-cards">
+<div class="card">
+<h3 data-i18n="el_h1_title">Metodología HMH Into Reading</h3>
+<p data-i18n="el_h1_desc">Integración de obras literarias alineadas con ciencias, estudios sociales y artes; diseñadas para potenciar habilidades avanzadas de lectura, escritura y debate.</p>
+</div>
+<div class="card">
+<h3 data-i18n="el_h2_title">Desarrollo Personal Estratégico</h3>
+<p>Un acompañamiento crucial que consolida la autoestima, la responsabilidad y el carácter en la etapa formativa más determinante de nuestros alumnos.</p>
+</div>
+</div>
+</section>
+<section class="content-section alt">
+<h2 class="section-title" data-i18n="edu_goals_title">Metas Educativas</h2>
+<div class="steps-grid">
+<div class="step-card"><h4 data-i18n="el_g1_title">Dominio Bilingüe y Certificaciones</h4><p data-i18n="el_g1_desc">Consolidación del idioma inglés respaldado por preparación continua hacia certificaciones con prestigio internacional como TOEFL.</p></div>
+<div class="step-card"><h4 data-i18n="el_g2_title">Excelencia Académica y Pensamiento Crítico</h4><p data-i18n="el_g2_desc">Un modelo exigente que desafía a los estudiantes a investigar, argumentar y comprender profundamente su entorno, combinando habilidades académicas e intelectuales.</p></div>
+<div class="step-card"><h4 data-i18n="el_g3_title">Ciudadanía y Valores Universales</h4><p data-i18n="el_g3_desc">Educación con un fuerte compromiso cívico y ético, formando individuos orientados hacia el bienestar y progreso de su sociedad.</p></div>
+</div>
+<div class="cta-block">
+<a class="btn-cta" data-i18n="req_info" href="https://wa.me/5213334093476" target="_blank">Solicitar Información</a>
+</div>
+</section>
+</div>
+<!-- PÁGINA: JUNIOR HIGH -->
+<div class="page-section" id="junior-high">
+<section class="level-hero">
+<div class="hero-content">
+<h1>Junior <span>High</span></h1>
+<p data-i18n="jh_hero_desc">La culminación de nuestra misión formativa: Jóvenes íntegros, biculturales y preparados para triunfar en un panorama globalizado.</p>
+</div>
+</section>
+<section class="content-section highlights-section" style="background-image: linear-gradient(rgba(10, 49, 97, 0.65), rgba(10, 49, 97, 0.65)), url('assets/webassets_optimized/Junior%20High/i%205.webp');">
+<h2 class="section-title" data-i18n="highlights_title">HIGHLIGHTS <strong>JUNIOR HIGH</strong></h2>
+<div class="grid-cards">
+<div class="card">
+<h3 data-i18n="jh_h1_title">Biculturalidad y Visión Internacional</h3>
+<p data-i18n="jh_h1_desc">Un currículo robusto respaldado por certificaciones globales (TOEFL y Alianza Francesa), que amplía de manera sustancial las opciones intelectuales y profesionales de nuestros estudiantes.</p>
+</div>
+<div class="card">
+<h3 data-i18n="jh_h2_title">Identidad y Liderazgo Ético</h3>
+<p data-i18n="jh_h2_desc">Consolidación de los valores universales a través del programa de desarrollo humano Aguilar Kubli en la etapa más importante para definir el liderazgo y la identidad juvenil.</p>
+</div>
+</div>
+</section>
+<section class="content-section alt">
+<h2 class="section-title" data-i18n="edu_goals_title">Metas Educativas</h2>
+<div class="steps-grid">
+<div class="step-card"><h4 data-i18n="jh_g1_title">Excelencia Lingüística Plena</h4><p data-i18n="jh_g1_desc">Egresados con un dominio sobresaliente y certificado del idioma inglés, complementado con una valiosa exposición al francés.</p></div>
+<div class="step-card"><h4 data-i18n="jh_g2_title">Preparación Intelectual Superior</h4><p data-i18n="jh_g2_desc">Integración del debate, la escritura crítica y el análisis a través del programa HMH Into Reading, garantizando el éxito académico en su futura educación media superior.</p></div>
+<div class="step-card"><h4 data-i18n="jh_g3_title">Misión Cumplida: Mente, Cuerpo y Espíritu</h4><p data-i18n="jh_g3_desc">La entrega a la sociedad de individuos de alto rendimiento intelectual, con sólidos valores éticos y profundamente comprometidos con el desarrollo de México.</p></div>
+</div>
+<div class="cta-block">
+<a class="btn-cta" data-i18n="req_info" href="https://wa.me/5213334093476" target="_blank">Solicitar Información</a>
+</div>
+</section>
+</div>
+<!-- Floating Contact Widget -->
+<div class="widget-contact">
+<a href="https://wa.me/5213334093476" target="_blank"></a>
+</div>
+<!-- Footer -->
+<footer>
+<div class="footer-grid">
+<div class="footer-col">
+<h4 data-i18n="ft_col1">Roosevelt School</h4>
+<p data-i18n="ft_desc">Forjando líderes desde 1978. Una formación integral de excelencia para la Mente, el Cuerpo y el Espíritu.</p>
+</div>
+<div class="footer-col">
+<h4 data-i18n="ft_col2">Enlaces</h4>
+<a href="aviso_de_privacidad.html" target="_blank" data-i18n="ft_privacy">Aviso de Privacidad</a>
+<a href="https://wa.me/5213334093476" target="_blank" data-i18n="ft_contact">Contacto (WhatsApp)</a>
+</div>
+<div class="footer-col">
+<h4 data-i18n="ft_col3">Redes Sociales</h4>
+<a href="https://www.facebook.com/RooseveltSchoolGdl" target="_blank">Facebook</a>
+<a href="https://www.instagram.com/rooseveltschoolgdl_oficial/" target="_blank">Instagram</a>
+</div>
+</div>
+<div class="footer-bottom" data-i18n="ft_copy">
+            © 2026 Roosevelt School. Todos los derechos reservados.
+        </div>
+</footer>
+<!-- Lightbox Modal -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+<span class="lightbox-close">×</span>
+<img alt="Zoomed Image" id="lightbox-img" src=""/>
+</div>
+<script>
+        // Lightbox Logic
+        function openLightbox(src) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            lightboxImg.src = src;
+            lightbox.classList.add('active');
+        }
+        function closeLightbox(event) {
+            if (event.target.id === 'lightbox' || event.target.className === 'lightbox-close') {
+                document.getElementById('lightbox').classList.remove('active');
+            }
+        }
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape") {
+                document.getElementById('lightbox').classList.remove('active');
+            }
+        });
+
+        // Initialize DOM Interactions
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mobile Menu Toggle
+            const mobileToggle = document.querySelector('.mobile-toggle');
+            if (mobileToggle) {
+                mobileToggle.addEventListener('click', function() {
+                    document.querySelector('.nav-links').classList.toggle('active');
+                });
+            }
+
+            // Slider Logic
+            const slider = document.getElementById('instalaciones-slider');
+            const prevBtn = document.querySelector('.prev-btn');
+            const nextBtn = document.querySelector('.next-btn');
+
+            if(slider && prevBtn && nextBtn) {
+                nextBtn.addEventListener('click', () => {
+                    const img = slider.querySelector('img');
+                    if(img) {
+                        const imgWidth = img.clientWidth + 20; 
+                        slider.scrollBy({ left: imgWidth, behavior: 'smooth' });
+                    }
+                });
+                prevBtn.addEventListener('click', () => {
+                    const img = slider.querySelector('img');
+                    if(img) {
+                        const imgWidth = img.clientWidth + 20;
+                        slider.scrollBy({ left: -imgWidth, behavior: 'smooth' });
+                    }
+                });
+            }
+
+            // SPA Navigation Logic
+            const triggers = document.querySelectorAll('[data-target]');
+            const sections = document.querySelectorAll('.page-section');
+            const navLinks = document.querySelectorAll('.nav-links a');
+
+            triggers.forEach(trigger => {
+                trigger.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = trigger.getAttribute('data-target');
+                    
+                    // Hide all
+                    sections.forEach(sec => sec.classList.remove('active'));
+                    
+                    // Show target
+                    const targetSection = document.getElementById(targetId);
+                    if(targetSection) {
+                        targetSection.classList.add('active');
+                    }
+                    
+                    // Update active nav link
+                    if(trigger.parentElement.classList.contains('nav-links') || targetId === 'inicio') {
+                        navLinks.forEach(link => link.classList.remove('active'));
+                        const matchingLink = document.querySelector(`.nav-links a[data-target="${targetId}"]`);
+                        if(matchingLink) matchingLink.classList.add('active');
+                    }
+                    
+                    // Close mobile menu if open
+                    document.querySelector('.nav-links').classList.remove('active');
+                    
+                    // Scroll top
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            });
+        });
+    </script>
+
+<script>
+    const translations = {
+        en: {
+            nav_inicio: "Home",
+            nav_early: "Early Years",
+            nav_elementary: "Elementary",
+            nav_junior: "Junior High",
+            nav_admission: "Admission Process",
+            nav_contact: "Admission & Contact",
+            hero_desc: "Based in Guadalajara, Jalisco, we follow a tradition of educational excellence since 1978. A bilingual, secular, and co-ed system founded on universal values.",
+            highlights_title: "HIGHLIGHTS",
+            home_h1_title: "Integral Excellence Formation",
+            home_h1_desc: "We cultivate the harmonious development of our students through an academic model that merges humanistic tradition with the most advanced educational methodologies.",
+            home_h2_title: "Global Perspective",
+            home_h2_desc: "Through absolute bilingualism and international accreditations, we prepare our students to stand out in a globally competitive environment.",
+            home_h3_title: "Leadership with Values",
+            home_h3_desc: "We build our prestige on respect, integrity, and social responsibility, forming not just students, but future ethical leaders.",
+            facilities_title: "FACILITIES",
+            location_title: "LOCATION",
+            accreditations_title: "Accreditations & Educational Alliances",
+            adm_title: "Admission <span>Process</span>",
+            adm_desc: "Start the journey towards educational excellence. Discover our step-by-step admission process designed to get to know your family and ensure a successful integration.",
+            adm_s1_title: "1. Personalized Attention",
+            adm_s1_desc: "Through our Admissions Office, we schedule an informative session to present our educational project.",
+            adm_s2_title: "2. Interview",
+            adm_s2_desc: "Meeting the family and the applicant to understand their expectations and educational needs.",
+            adm_s3_title: "3. Evaluation",
+            adm_s3_desc: "Academic and psychometric assessment to determine the applicant's profile and level.",
+            adm_s4_title: "4. Results",
+            adm_s4_desc: "Delivery of results by the Admissions Committee along with feedback.",
+            adm_s5_title: "5. Enrollment",
+            adm_s5_desc: "Submission of required documentation and payment of corresponding fees.",
+            adm_s6_title: "6. Welcome",
+            adm_s6_desc: "Integration into the Roosevelt community and beginning of the academic journey.",
+            adm_cta: "Contact Admissions",
+            ey_hero_desc: "The foundation of a bright future begins with curiosity, exploration, and a loving environment that fosters cognitive and emotional development.",
+            ey_hl_title: "EARLY YEARS HIGHLIGHTS",
+            ey_h1_title: "Integral Attention & Human Development",
+            ey_h1_desc: "A structured approach through constructive play and multisensory exploration that guarantees solid foundations in neurodevelopment.",
+            ey_h2_title: "Cognitive Competencies Development",
+            ey_h2_desc: "We foster socialization, active listening, and linguistic structuring in a 100% English immersion environment.",
+            edu_goals_title: "Educational Goals",
+            ey_g1_title: "Literary Immersion & Early Bilingualism",
+            ey_g1_desc: "Through world-class programs like Jolly Phonics, we introduce children to the world of bilingual reading naturally and effectively.",
+            ey_g2_title: "Solid Academic Foundations",
+            ey_g2_desc: "We consolidate the basics of literacy and mathematical logic, preparing students for the elementary transition.",
+            ey_g3_title: "Autonomy & Critical Thinking",
+            ey_g3_desc: "Developing independence, self-confidence, and problem-solving skills from early stages.",
+            req_info: "Request Information",
+            el_hero_desc: "Forging analytical and creative minds. Our elementary model challenges students to investigate, question, and apply their knowledge critically.",
+            el_hl_title: "ELEMENTARY HIGHLIGHTS",
+            el_h1_title: "HMH Into Reading Methodology",
+            el_h1_desc: "Integration of high-quality literary works to develop advanced reading comprehension and structured analytical writing.",
+            el_h2_title: "Strategic Personal Development",
+            el_h2_desc: "Crucial support during the transition from childhood to pre-adolescence, strengthening emotional intelligence and self-regulation.",
+            el_g1_title: "Bilingual Mastery & Certifications",
+            el_g1_desc: "Consolidation of the English language leading to Cambridge international certifications, ensuring global communicative competence.",
+            el_g2_title: "Academic Excellence & Critical Thinking",
+            el_g2_desc: "A demanding model that challenges students to apply knowledge to real situations through project-based learning.",
+            el_g3_title: "Citizenship & Universal Values",
+            el_g3_desc: "Education with a strong civic commitment, promoting respect, empathy, and social responsibility in every action.",
+            jh_hero_desc: "The culmination of our formative mission. We prepare autonomous teenagers with high academic projection and an international perspective.",
+            jh_hl_title: "JUNIOR HIGH HIGHLIGHTS",
+            jh_h1_title: "Biculturalism & International Vision",
+            jh_h1_desc: "A robust curriculum backed by institutions like the University of Cambridge, offering a competitive edge for globalized higher education.",
+            jh_h2_title: "Identity & Ethical Leadership",
+            jh_h2_desc: "Consolidation of universal values and ethical character in teenagers, empowering them as agents of positive change in society.",
+            jh_g1_title: "Full Linguistic Excellence",
+            jh_g1_desc: "Graduates with an outstanding and certified command of the English language, complemented by valuable exposure to French.",
+            jh_g2_title: "Superior Intellectual Preparation",
+            jh_g2_desc: "Integration of debate, critical writing, and analysis through the HMH Into Reading program, ensuring academic success in their future high school education.",
+            jh_g3_title: "Mission Accomplished: Mind, Body, and Spirit",
+            jh_g3_desc: "Delivering to society individuals of high intellectual performance, with solid ethical values and deeply committed to the development of Mexico.",
+            ft_col1: "Roosevelt School",
+            ft_desc: "Forging leaders since 1978. A comprehensive formation of excellence for Mind, Body, and Spirit.",
+            ft_col2: "Links",
+            ft_privacy: "Privacy Policy",
+            ft_contact: "Contact (WhatsApp)",
+            ft_col3: "Social Media",
+            ft_copy: "© 2026 Roosevelt School. All rights reserved."
+        },
+        es: {
+            nav_inicio: "Inicio",
+            nav_early: "Early Years",
+            nav_elementary: "Elementary",
+            nav_junior: "Junior High",
+            nav_admission: "Proceso de Admisión",
+            nav_contact: "Admisiones y Contacto",
+            hero_desc: "Con sede en Guadalajara, Jalisco, seguimos una tradición de excelencia educativa desde 1978. Sistema bilingüe, laico y mixto fundamentado en valores universales.",
+            highlights_title: "HIGHLIGHTS",
+            home_h1_title: "Formación Integral de Excelencia",
+            home_h1_desc: "Cultivamos el desarrollo armónico de nuestros alumnos mediante un modelo académico que fusiona la tradición humanista con las metodologías educativas más avanzadas.",
+            home_h2_title: "Perspectiva Global",
+            home_h2_desc: "A través de un bilingüismo absoluto y certificaciones internacionales, preparamos a nuestros estudiantes para destacar en un entorno globalmente competitivo.",
+            home_h3_title: "Liderazgo con Valores",
+            home_h3_desc: "Cimentamos nuestro prestigio en el respeto, la integridad y la responsabilidad social, formando no solo alumnos, sino futuros líderes éticos.",
+            facilities_title: "INSTALACIONES",
+            location_title: "UBICACIÓN",
+            accreditations_title: "Acreditaciones y Alianzas Educativas",
+            adm_title: "Proceso de <span>Admisión</span>",
+            adm_desc: "Inicie el camino hacia la excelencia educativa. Descubra nuestro proceso de admisión paso a paso, diseñado para conocer a su familia y garantizar una integración exitosa.",
+            adm_s1_title: "1. Atención Personalizada",
+            adm_s1_desc: "A través de nuestra Oficina de Admisiones, programamos una sesión informativa para presentar nuestro proyecto educativo.",
+            adm_s2_title: "2. Entrevista",
+            adm_s2_desc: "Conocer a la familia y al aspirante para entender sus expectativas y necesidades educativas.",
+            adm_s3_title: "3. Evaluación",
+            adm_s3_desc: "Valoración académica y psicométrica para determinar el perfil y nivel del aspirante.",
+            adm_s4_title: "4. Resultados",
+            adm_s4_desc: "Entrega de resultados por parte del Comité de Admisiones junto con retroalimentación.",
+            adm_s5_title: "5. Inscripción",
+            adm_s5_desc: "Entrega de documentación requerida y pago de cuotas correspondientes.",
+            adm_s6_title: "6. Bienvenida",
+            adm_s6_desc: "Integración a la comunidad Roosevelt y comienzo del ciclo escolar.",
+            adm_cta: "Contactar a Admisiones",
+            ey_hero_desc: "El cimiento de un futuro brillante comienza con la curiosidad, la exploración y un entorno afectivo que estimula el desarrollo cognitivo y emocional.",
+            ey_hl_title: "HIGHLIGHTS EARLY YEARS",
+            ey_h1_title: "Atención Integral y Desarrollo Humano",
+            ey_h1_desc: "Un enfoque estructurado a través del juego constructivo y la exploración multisensorial que garantiza bases sólidas en el neurodesarrollo.",
+            ey_h2_title: "Desarrollo de Competencias Cognitivas",
+            ey_h2_desc: "Fomentamos la socialización, la escucha activa y la estructuración lingüística en un entorno de inmersión 100% en inglés.",
+            edu_goals_title: "Metas Educativas",
+            ey_g1_title: "Inmersión Literaria y Bilingüismo Temprano",
+            ey_g1_desc: "A través de programas de clase mundial como Jolly Phonics, introducimos a los niños al mundo de la lectura bilingüe de forma natural y efectiva.",
+            ey_g2_title: "Fundamentos Académicos Sólidos",
+            ey_g2_desc: "Consolidamos las bases de la lectoescritura y la lógica matemática, preparando a los alumnos para la transición a primaria.",
+            ey_g3_title: "Autonomía y Pensamiento Crítico",
+            ey_g3_desc: "Desarrollo de la independencia, seguridad en sí mismos y habilidades para la resolución de problemas desde etapas tempranas.",
+            req_info: "Solicitar Información",
+            el_hero_desc: "Forjando mentes analíticas y creativas. Nuestro modelo de primaria reta a los alumnos a investigar, cuestionar y aplicar sus conocimientos de manera crítica.",
+            el_hl_title: "HIGHLIGHTS ELEMENTARY",
+            el_h1_title: "Metodología HMH Into Reading",
+            el_h1_desc: "Integración de obras literarias de alta calidad para desarrollar comprensión lectora avanzada y escritura analítica estructurada.",
+            el_h2_title: "Desarrollo Personal Estratégico",
+            el_h2_desc: "Un acompañamiento crucial durante la transición de la niñez a la preadolescencia, fortaleciendo la inteligencia emocional y la autorregulación.",
+            el_g1_title: "Dominio Bilingüe y Certificaciones",
+            el_g1_desc: "Consolidación del idioma inglés conducente a certificaciones internacionales de Cambridge, asegurando competencia comunicativa global.",
+            el_g2_title: "Excelencia Académica y Pensamiento Crítico",
+            el_g2_desc: "Un modelo exigente que desafía a los alumnos a aplicar el conocimiento en situaciones reales mediante el aprendizaje basado en proyectos.",
+            el_g3_title: "Ciudadanía y Valores Universales",
+            el_g3_desc: "Educación con un fuerte compromiso cívico, promoviendo el respeto, la empatía y la responsabilidad social en cada acción.",
+            jh_hero_desc: "La culminación de nuestra misión formativa. Preparamos adolescentes autónomos con alta proyección académica y perspectiva internacional.",
+            jh_hl_title: "HIGHLIGHTS JUNIOR HIGH",
+            jh_h1_title: "Biculturalidad y Visión Internacional",
+            jh_h1_desc: "Un currículo robusto respaldado por instituciones como la Universidad de Cambridge, ofreciendo una ventaja competitiva para la educación superior globalizada.",
+            jh_h2_title: "Identidad y Liderazgo Ético",
+            jh_h2_desc: "Consolidación de los valores universales y el carácter ético en los adolescentes, empoderándolos como agentes de cambio positivo en la sociedad.",
+            jh_g1_title: "Excelencia Lingüística Plena",
+            jh_g1_desc: "Egresados con un dominio sobresaliente y certificado del idioma inglés, complementado con una valiosa exposición al francés.",
+            jh_g2_title: "Preparación Intelectual Superior",
+            jh_g2_desc: "Integración del debate, la escritura crítica y el análisis a través del programa HMH Into Reading, garantizando el éxito académico en su futura educación media superior.",
+            jh_g3_title: "Misión Cumplida: Mente, Cuerpo y Espíritu",
+            jh_g3_desc: "La entrega a la sociedad de individuos de alto rendimiento intelectual, con sólidos valores éticos y profundamente comprometidos con el desarrollo de México.",
+            ft_col1: "Roosevelt School",
+            ft_desc: "Forjando líderes desde 1978. Una formación integral de excelencia para la Mente, el Cuerpo y el Espíritu.",
+            ft_col2: "Enlaces",
+            ft_privacy: "Aviso de Privacidad",
+            ft_contact: "Contacto (WhatsApp)",
+            ft_col3: "Redes Sociales",
+            ft_copy: "© 2026 Roosevelt School. Todos los derechos reservados."
+        }
+    };
+
+    let currentLang = 'en';
+
+    function toggleLangMenu() {
+        document.getElementById('langOptions').classList.toggle('active');
+    }
+
+    function setLang(lang) {
+        currentLang = lang;
+        const btn = document.getElementById('langBtn');
+        if (lang === 'en') {
+            btn.innerHTML = '<img src="https://flagcdn.com/w20/us.png" alt="English"> EN';
+        } else {
+            btn.innerHTML = '<img src="https://flagcdn.com/w20/mx.png" alt="Español"> ES';
+        }
+        
+        const menu = document.getElementById('langOptions');
+        if (menu) menu.classList.remove('active');
+        
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if(translations[lang][key]) {
+                el.innerHTML = translations[lang][key]; 
+            }
+        });
+    }
+
+    document.addEventListener('click', (e) => {
+        if(!e.target.closest('.lang-switcher')) {
+            const menu = document.getElementById('langOptions');
+            if(menu) menu.classList.remove('active');
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        setLang('en');
+    });
+</script>
+</body>
+</html>
