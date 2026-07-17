@@ -358,6 +358,82 @@
         .lang-options button { background: none; border: none; padding: 12px 15px; display: flex; align-items: center; gap: 10px; cursor: pointer; text-align: left; width: 100%; font-size: 14px; transition: background 0.2s; font-family: 'Inter', sans-serif; font-weight: 500; color: var(--c-blue); }
         .lang-options button:hover { background: #f0f4f8; }
         .lang-options button img { width: 20px; border-radius: 2px; }
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            padding: 5px;
+        }
+        .hamburger span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background-color: var(--c-blue);
+            border-radius: 3px;
+            transition: all 0.3s;
+        }
+
+        @media (max-width: 768px) {
+            .top-bar {
+                padding: 0 5px;
+                justify-content: center;
+                gap: 5px;
+            }
+            .top-bar a {
+                margin-left: 0;
+                font-size: 11px;
+                white-space: nowrap;
+            }
+            .btn-conversion {
+                padding: 6px 12px;
+                font-size: 11px;
+            }
+            .lang-switcher {
+                margin-left: 0;
+            }
+            .current-lang {
+                padding: 4px 8px;
+                font-size: 11px;
+            }
+            .current-lang img {
+                width: 16px;
+            }
+            .main-nav-wrapper {
+                top: 55px;
+            }
+            .main-nav {
+                flex-wrap: wrap;
+                padding: 10px 15px;
+                border-radius: 20px;
+            }
+            .logo {
+                gap: 8px;
+            }
+            .logo img.nav-logotipo {
+                height: 22px;
+            }
+            .logo img.nav-isotipo {
+                height: 26px;
+            }
+            .hamburger {
+                display: flex;
+            }
+            .nav-links {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                gap: 15px;
+                padding-top: 15px;
+                border-top: 1px solid rgba(10,49,97,0.1);
+                margin-top: 10px;
+            }
+            .nav-links.mobile-active {
+                display: flex;
+            }
+        }
 </style>
 </head>
 <body>
@@ -381,7 +457,10 @@
 <img alt="Roosevelt Isotipo" class="nav-isotipo" src="assets/logo/roosevelt_isotipo.svg"/>
 <img alt="Roosevelt School" class="nav-logotipo" src="assets/logo/roosevelt_logotipo_texto.svg"/>
 </a>
-<div class="nav-links">
+<button class="hamburger" onclick="toggleMobileMenu()">
+    <span></span><span></span><span></span>
+</button>
+<div class="nav-links" id="navLinks">
 <a class="active" data-i18n="nav_inicio" data-target="inicio">Inicio</a>
 <a data-i18n="nav_early" data-target="early-years">Early Years</a>
 <a data-i18n="nav_elementary" data-target="elementary">Elementary</a>
@@ -902,6 +981,19 @@
             const menu = document.getElementById('langOptions');
             if(menu) menu.classList.remove('active');
         }
+    });
+
+    function toggleMobileMenu() {
+        document.getElementById('navLinks').classList.toggle('mobile-active');
+    }
+
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            const nav = document.getElementById('navLinks');
+            if (nav && nav.classList.contains('mobile-active')) {
+                nav.classList.remove('mobile-active');
+            }
+        });
     });
 
     document.addEventListener('DOMContentLoaded', () => {
